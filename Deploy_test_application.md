@@ -6,7 +6,14 @@ We have a preconfigured manifest that includes two [Kubernetes deployments](http
 
 
 
-1. Review the the manifest file `deployments/cafe-app/cafe-app.yml`. You can see the deployment and services for both the **coffee** and **tea** application in the **cafe** `namespace`. These sections are separated by the `---` characters which  indicates the start of a document. All YAML files can optionally begin with `---` and end with `...`  to indicates the start and end of a document.
+1. Review the the `deployments/cafe-app/cafe-app.yml`manifest file 
+
+Noteworthy points about the `cafe-app.yml` manifest:
+
+* It contains both Deployment and Service specification in the same file for **coffee** and **tea** applications
+
+* They are deployed in the **cafe** `namespace`
+*  These sections are separated by the `---` characters which  indicates the start of a document. All YAML files can optionally begin with `---` and end with `...`  to indicates the start and end of a document.
 
 
 

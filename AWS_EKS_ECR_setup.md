@@ -1,3 +1,40 @@
+## AWS CLI Basic Setting(Configuration and Credential File Settings)
+
+https://twpower.github.io/210-create-list-delete-ec2-instance-using-aws-cli-en
+
+1. Configure client using `aws configure`
+
+```
+aws configure
+
+AWS Access Key ID [None]: [YOUR KEY]
+AWS Secret Access Key [None]: [YOUR KEY]
+Default region name [None]: us-west-2
+Default output format [None]: json
+```
+
+2. Check `~/.aws/credentials` settings
+
+```
+cat ~/.aws/credentials
+
+[default]
+aws_access_key_id = [YOUR KEY]
+aws_secret_access_key = [YOUR KEY]
+```
+
+3. Check `~/.aws/config`  setting
+
+```
+cat ~/.aws/config
+
+[default]
+region = us-west-2
+output = json
+```
+
+
+
 ## AWS Regions, Availability Zones and naming convention suggestions
 
 * Decide on a [Data center region](https://aws.amazon.com/about-aws/global-infrastructure/) that is closest to you and meet your needs. Check out the [AWS latency test](https://ping.psa.fun/)!
