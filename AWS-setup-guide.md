@@ -1,6 +1,10 @@
+# AWS Cli, AKS and ACR Setup guide
+
+
+
 ## AWS CLI Basic Setting(Configuration and Credential File Settings)
 
-https://twpower.github.io/210-create-list-delete-ec2-instance-using-aws-cli-en
+
 
 1. Configure client using `aws configure`
 
@@ -220,3 +224,8 @@ ews ecr   describe-repositories --region $MY_REGION | grep hello-world
             "repositoryUri": "664341837355.dkr.ecr.us-west-2.amazonaws.com/armand/hello-world",
 ```
 
+
+
+## References
+
+https://twpower.github.io/210-create-list-delete-ec2-instance-using-aws-cli-en

@@ -1,4 +1,4 @@
-# Cluster IP
+# ClusterIP
 
 
 
@@ -6,9 +6,11 @@ ClusterIP accesses the services through proxy. ClusterIP can access services onl
 
 We can test this by running a simple HTTP client  inside your Kubernetes Cluster
 
+![Diagram showing ClusterIP traffic flow in a Kubernetes cluster](media/clusterip.png)
 
 
- ![img](https://www.edureka.co/community/?qa=blob&qa_blobid=12695704322209366535)
+
+## Test ClusterIP from a Internal client
 
 1. We can deploy a utility container, [`network-tools`](https://hub.docker.com/r/armsultan/network-tools), pod to test requests to our `services `via it's `ClusterIP`
 

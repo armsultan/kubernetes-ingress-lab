@@ -10,11 +10,13 @@ To access the service from outside the cluster, you use the  public or private I
 
 
 
-![Diagram showing NodePort traffic flow in an AKS cluster](https://docs.microsoft.com/en-us/azure/aks/media/concepts-network/aks-nodeport.png)
+![Diagram showing NodePort traffic flow in a Kubernetes cluster](media/nodeport.png)
+
+Lets expose NodePort for our **coffee** and **tea** services
 
 
 
-## Setup NodePort 
+## Expose NodePort for our services
 
 1. Review the `deployments/cafe-app/cafe-app-nodeport.yml`manifest file
 
@@ -43,7 +45,7 @@ kubectl expose deployment coffee  --type=NodePort  --name=coffee-svc
 kubectl expose deployment tea  --type=NodePort  --name=tea-svc
 `````
 
-3. Confirm the **Coffee** and **Tea** services (`coffee-svc` and `tea-svc ` ) are now `TYPE NodePort`. You will see the `NodePort`mappings under `PORT(S)`. Also You will notice that `ClusterIP` address for those services coexist with `NodePort` 
+3. Confirm the **Coffee** and **Tea** services (`coffee-svc` and `tea-svc ` ) are now `TYPE NodePort`. You will see the `NodePort`mappings under `PORT(S)`.Also You will notice that `ClusterIP` , an Internal only address, for those services coexist with `NodePort` 
 
 In the example below we see `Nodeport` `31231` map to `80`for `coffee-svc`, and `Nodeport` ` 30095` to `80`for `tea-svc`:
 
@@ -70,22 +72,47 @@ NAME                                          STATUS  EXTERNAL-IP
 ip-192-168-23-171.us-west-2.compute.internal  Ready   34.215.33.171
 ip-192-168-48-90.us-west-2.compute.internal   Ready   54.191.50.101
 ip-192-168-89-32.us-west-2.compute.internal   Ready   18.236.253.30
-
-
 ```
 
 5. Before we test accessing **NodeIP:NodePort** from an outside cluster, we need to modify the security group of the nodes to **allow incoming traffic** through the port `30000-32767`.
 
+
+
+I have not successfully done this via AWS CLI, so here is how you can do it via the AWS Management console:
+
+**EC2 Instances** > Click on `Instance ID` for any Kubernetes Node  > under the **Security** Tab, click on any security group to edit the inbound rules > **Add Rule:** Custom TCP, Port range - `30000-32767` , Source - Anywhere (`0.0.0.0/0`) > **Save rules**
+
+![ec2 instances](media/ec2_instances.png)
+
+
+
+![ec2 instances security group](media/ec2_instances-security-group.png)
+
+
+
+![edit inbound rule](media/security-group-edit-inbound-rules.png)
+
+![inbound rule for nodeport](media/security-group-edit-inbound-rules-nodeport.png)
+
+
+
+TODO:
+
 ```
+
 MY_EKS=eks-armand-uswest2
 MY_CLUSTER_SECURITY_GROUP_ID=$(aws eks describe-cluster --name $MY_EKS \
 	--query 'cluster.resourcesVpcConfig.clusterSecurityGroupId' \
 	--output text)
 	
+
+	
 	# THIS WORKS
 aws ec2  describe-security-groups \
 	--filters "Name=tag:eksctl.cluster.k8s.io/v1alpha1/cluster-name,Values=$MY_EKS" \
 	--query 'SecurityGroups[*].GroupName' 
+	
+	MY_CLUSTER_SECURITY_GROUP_ID=sg-02f8bcc6f0b29ae2e
 	
 
 # Update our security group to allow TCP 30000-32767
@@ -97,7 +124,10 @@ aws ec2 authorize-security-group-ingress \
 	
 # Confirm FromPort and ToPort
 aws ec2  describe-security-groups \
-	--group-id $MY_CLUSTER_SECURITY_GROUP_ID
+	--group-id $MY_CLUSTER_SECURITY_GROUP_ID \
+	--query 'SecurityGroups[*].IpPermissions' 
+
+
 
 	--filters "Name=tag:eksctl.cluster.k8s.io/v1alpha1/cluster-name,Values=$MY_EKS" \
 
@@ -115,13 +145,20 @@ $ aws ec2 authorize-security-group-ingress --group-id sg-903004f8 --protocol tcp
 
 ```
 
-## Test NodePort from a External client
+## Test NodePort from a external client
 
-We can test External access to our applications using `Nodeport` from a  HTTP client **external to  your Kubernetes Cluster**, on cloud environments, you can deploy a simple Linux Client machine in your VPC
+1. Once again, get the Kubernetes worker Nodes` External-IP` using the following command
 
-For AWS, follow [EC2 instance client setup](ec2-instance-client-setup.md)
+```
+kubectl get nodes -o wide |  awk {'print $1" " $2 " " $7'} | column -t
 
-Once you have setup a Linux machine, follow the steps below
+NAME                                          STATUS  EXTERNAL-IP
+ip-192-168-23-171.us-west-2.compute.internal  Ready   34.215.33.171
+ip-192-168-48-90.us-west-2.compute.internal   Ready   54.191.50.101
+ip-192-168-89-32.us-west-2.compute.internal   Ready   18.236.253.30
+```
+
+2. Pick a Node/External-IP from the last step and use `curl` to test external access using `nodePort`
 
 ```
 NODE_EXTERNAL_IP=54.191.50.101
@@ -129,45 +166,35 @@ NODEPORT_COFFEE=31231
 NODEPORT_TEA=30095
 
 # Coffee Service
-curl http://$NODE_EXTERNAL_IP:$NODEPORT_COFFEE -I
+curl -s http://$NODE_EXTERNAL_IP:$NODEPORT_COFFEE | grep title
 
 # Tea Service
-curl http://$NODE_EXTERNAL_IP:$NODEPORT_TEA -I
-
-
-curl http://34.215.33.171:31231 -I -H "Host coffee.cafe.com"
-
-curl http://18.236.253:31231 -I -H "Host coffee.cafe.com"
-
-
- 18.236.253.
+curl -s http://$NODE_EXTERNAL_IP:$NODEPORT_COFFEE | grep title
 ```
 
-references
+We should see the following output on a successful request:
+
+```
+ <title>Hello World</title>
+```
+
+
+
+## Remove Security group 
+
+When you are finished testing `nodePort` access, you can remove the security group created for this exercise:
+
+I have not successfully done this via AWS CLI, so here is how you can do it via the AWS Management console:
+
+**EC2 Instances** > Click on `Instance ID` for any Kubernetes Node  > under the **Security** Tab, click on any security group we previously edited the inbound rules > **Delete** Custom TCP, Port range - `30000-32767` , Source - Anywhere (`0.0.0.0/0`) and `::/0` > **Save rules**
+
+
+
+![Delete inbound rules](media/security-group-delete-inbound-rules.png)
+
+## References
 
 https://medium.com/faun/learning-kubernetes-by-doing-part-3-services-ed5bf7e2bc8e
 
-```yaml
-kubectl port-forward $(kubectl get pod -l "app=coffee-svc" -o jsonpath={.items[0].metadata.name}) 31231
-```
 
 
-
-## port-forward
-
-
-
-## Forward a local port to a port on the Pod
-
-
-
-`kubectl port-forward` makes a specific [Kubernetes API request](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#-strong-proxy-operations-pod-v1-core-strong-).  That means the system running it needs access to the API server, and  any traffic will get tunneled over a single HTTP connection.
-
-Having this is really useful for debugging (if one specific pod is  acting up you can connect to it directly; in a microservice environment  you can talk to a back-end service you wouldn't otherwise expose) but  it's not an alternative to setting up service objects.  When I've worked with `kubectl port-forward` it's been visibly slower than  connecting to a pod via a service, and I've found seen the command just  stop after a couple of minutes.  Again these aren't big problems for  debugging, but they're not what I'd want for a production system.
-
-`kubectl port-forward` allows using resource name, such as a pod name, to select a matching pod to port forward to.
-
-```shell
-# Change redis-master-765d459796-258hz to the name of the Pod
-kubectl port-forward coffee-74c98dd7c8-kvs2b -n cafe 31231
-```
