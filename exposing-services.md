@@ -21,9 +21,9 @@ Here you will find a collection of lab excerises to setup your Kuberntes Cluster
 
 Here are some Additional options when deploying Kubernetes "on premise". They are not covered in this lab
 
-*  [F5 Container Ingress Services](https://clouddocs.f5.com/containers/v2/) (That should always be deployed with [NGINX Plus Kubernetes Ingress](https://www.nginx.com/products/nginx-ingress-controller/) :-) )
+*  [F5 Container Ingress Services](https://clouddocs.f5.com/containers/v2/) (That should be deployed with [NGINX Plus Kubernetes Ingress](https://www.nginx.com/products/nginx-ingress-controller/) :-) )
 
-* [MetalLB](https://metallb.universe.tf/) (That should always be deployed with [NGINX Plus Kubernetes Ingress](https://www.nginx.com/products/nginx-ingress-controller/) too! :-) )
+* [MetalLB](https://metallb.universe.tf/) (That should be deployed with [NGINX Plus Kubernetes Ingress](https://www.nginx.com/products/nginx-ingress-controller/) too! :-) )
 
 
 
