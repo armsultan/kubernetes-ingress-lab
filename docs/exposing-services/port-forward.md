@@ -2,11 +2,9 @@
 
 
 
-Port forwarding is a convenient tool that can help you debug applications and deployments withinyour Kubernetes cluster. The Kubernetes API server establishes a single HTTP  connection between your localhost and the resource running on your  cluster, allowing you to engage that specific pod directly, either to diagnose an issue or debug if necessary.
+Port forwarding is a convenient tool that can help you debug applications and deployments within your Kubernetes cluster. Behind the scenes, kubectl uses the **Kubernetes API** that tunnels all traffic over a single HTTP connection between your `localhost` and the resource running on your cluster. This allows you to directly engage that specific pod and diagnose an issue or debug if necessary.
 
-
-
-![port-forward](https://gardener.cloud/__resources/acee3cae-5fd8-46d5-96fa-dd79f6669713.svg)
+![port-forward between localhost and pod](media/port-forward.png)
 
 Lets try  `port-forward` command to one our applications
 
@@ -60,4 +58,5 @@ curl -s localhost:8080 | grep title
 
 ![coffee](media/coffee.png)
 
-4. Hit `Ctrl+C` to close the port-forward connection from your client to the Kubernetes cluster
+4. Hit `Ctrl+C` in the terminal window to close the port-forward connection from your client to the Kubernetes cluster
+

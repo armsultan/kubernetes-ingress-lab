@@ -9,11 +9,11 @@ Here you will find a collection of lab excerises to setup your Kuberntes Cluster
 
 ### Kubernetes in the Cloud
 
-* **[ClusterIP](ClusterIP.md)** - Creates an internal IP address for use  within the AKS cluster. Good for **internal-only** applications that support other workloads within the cluster. ClusterIP on a service provides basic round-robin algorithm load balancing to the endpoints on the pods
+* [**ClusterIP**](cluster-ip.md) - Creates an internal IP address for use  within the AKS cluster. Good for **internal-only** applications that support other workloads within the cluster. ClusterIP on a service provides basic round-robin algorithm load balancing to the endpoints on the pods
 * [**Port-forward**](port-forward.md) - enables quick access a port of a specific pod of your cluster. The Kubernetes API server will establish a single HTTP  connection between your` localhost` and the resource running on your  cluster.
-* [**NodePort**](NodePort.md) - Creates a port mapping on the underlying  node that allows the application to be accessed directly with the node  IP address and port. 
-* [**LoadBalancer**](LoadBalancer.md) - Creates an Azure load balancer resource, configures an external IP address, and connects the requested  pods to the load balancer backend pool. To allow customers' traffic to  reach the application, load balancing rules are created on the desired  ports
-* [**Ingress controllers**](Ingress-Controller.md) -  When you create a `LoadBalancer` type Service, an underlying Azure load balancer resource is created. The load balancer is configured to  distribute traffic to the pods in your Service on a given port. The  `LoadBalancer` only works at **layer 4** , so the service is unaware of the  actual applications, and can't make any additional routing  considerations.
+* [**NodePort**](node-port.md) - Creates a port mapping on the underlying  node that allows the application to be accessed directly with the node  IP address and port. 
+* [**LoadBalancer**](load-balancer.) - Creates an Azure load balancer resource, configures an external IP address, and connects the requested  pods to the load balancer backend pool. To allow customers' traffic to  reach the application, load balancing rules are created on the desired  ports
+* [**Ingress controllers**](ingress-controller.md) -  When you create a `LoadBalancer` type Service, an underlying Azure load balancer resource is created. The load balancer is configured to  distribute traffic to the pods in your Service on a given port. The  `LoadBalancer` only works at **layer 4** , so the service is unaware of the  actual applications, and can't make any additional routing  considerations.
 
 
 

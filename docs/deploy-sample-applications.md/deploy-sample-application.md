@@ -1,8 +1,8 @@
 ## Deploy our Coffee and Tea Application
 
-A [Kubernetes manifest file](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#deployments-and-yaml-manifests) defines a desired state for the cluster, such as what container images  to run, replica count, resource limits and much more. In this demo, a manifest is used to create all objects  needed to run the the coffee and tea applications. 
+A [Kubernetes manifest file](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#deployments-and-yaml-manifests) defines the desired state for the cluster, such as what container images to run, replica count, resource limits, and much more. In this demo, a manifest specifies all objects needed to run the coffee and tea applications. 
 
-We have a preconfigured manifest that includes two [Kubernetes deployments](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#deployments-and-yaml-manifests) - one for the **coffee** application, and the other for a **tea** application, both are simply NGINX web servers presenting a web page. Two [Kubernetes Services](https://docs.microsoft.com/en-us/azure/aks/concepts-network#services) are also created, one for each application,  Service is an logically group a set of pods together and provide network connectivity. A service  keep track of Endpoints (IP address and ports) on the pods we can connect to.
+We have a preconfigured manifest that includes two [Kubernetes deployments](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#deployments-and-yaml-manifests) - one for the **coffee** application and the other for a **tea** application; both are simply NGINX web servers presenting a web page. Two [Kubernetes Services](https://docs.microsoft.com/en-us/azure/aks/concepts-network#services) are also created, one for each application, a `service` is a logical group of a set of pods together and provide network connectivity. A `service` keeps track of Pod Endpoints (IP address and ports) we can connect  to.
 
 
 
@@ -10,14 +10,11 @@ We have a preconfigured manifest that includes two [Kubernetes deployments](http
 
 Noteworthy points about the `cafe-app.yml` manifest:
 
-* It contains both Deployment and Service specification in the same file for **coffee** and **tea** applications
+* It contains both Deployment and Service specification in the same file for **coffee** and **tea** applications.
+* They are deployed in the **cafe** namespace.
+* These sections are separated by the --- characters, which indicates the start of a document. All YAML files can optionally begin with `---` and end with `...` to mark the start and end of a document.
 
-* They are deployed in the **cafe** `namespace`
-*  These sections are separated by the `---` characters which  indicates the start of a document. All YAML files can optionally begin with `---` and end with `...`  to indicates the start and end of a document.
-
-
-
-2. Create the **cafe** [`namespace`](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), that will be our "virtual cluster"  where we deploy our coffee and tea application. Run the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply)  to create our cafe `namespace` defined in a manifest file  and run [kubectl get](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) to display one or many resources
+2. Create the **cafe** [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), our "virtual cluster" where we deploy our coffee and tea application. Run the [kubectl apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) to create our cafe namespace defined in a manifest file and run [kubectl get](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) to display one or many resources
 
 
 
