@@ -13,17 +13,15 @@
 2. [Deploy a sample application](docs/deploy-sample-applications/deploy-sample-application.md)
 
 3. [Exposing Services in Kubernetes](docs/exposing-services/exposing-services-in-kubernetes.md)
-1. [ClusterIP](docs/exposing-services/cluster-ip.md) 
+   1. [ClusterIP](docs/exposing-services/cluster-ip.md) 
    2. [Port-forward](docs/exposing-services/port-forward.md)
    3. [NodePort](docs/exposing-services/node-port.md) 
    4. [LoadBalancer](docs/exposing-services/load-balancer.) 
-   5. [Ingress Controller](docs/exposing-services/ingress-controller.md)  - TODO
+   5. [Ingress Controller](docs/exposing-services/ingress-controller.md) - **TODO**
 
 
 
 ## TO DO / Ideas:
-
-
 
 * Ingress vs VirtualServer and VirtualServerRoute resources
   * Ingress resource
