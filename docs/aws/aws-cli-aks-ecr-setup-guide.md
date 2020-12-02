@@ -234,7 +234,7 @@ docker push 664341837355.dkr.ecr.us-west-2.amazonaws.com/armand/hello-world
 ```
 MY_REGION=us-west-2
 
-aws ecr   describe-repositories --region $MY_REGION | grep hello-world
+aws ecr describe-repositories --region $MY_REGION | grep hello-world
 
 # example output:
             "repositoryArn": "arn:aws:ecr:us-west-2:664341837355:repository/armand/hello-world",
