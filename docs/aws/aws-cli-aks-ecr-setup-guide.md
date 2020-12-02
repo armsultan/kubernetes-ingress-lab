@@ -9,13 +9,13 @@
 
 **Example:** 
 
-I am located in Denver, Colorado; I will opt to use the Datacenter region `us-west-2` based in US West (N. California). I could also use the following naming convention:
+I am located in Denver, Colorado; I will opt to use the Datacenter region `us-west-2` based in US West (Oregon). I could also use the following naming convention:
 
 ```bash
 <Asset_type>-<your_id_yourname>-<location>-<###>
 ```
 
-So for my EKS Cluster I will deploy in US West (N. California), i.e., `us-west-2 `, and will name my Cluster `eks-armand-us-west-2` or just `aks-armand-uswest1` since I don't intend to have more than one EKS deployment
+So for my EKS Cluster I will deploy in US West (Oregon), i.e., `us-west-2 `, and will name my Cluster `eks-armand-us-west-2` or just `aks-armand-uswest2` since I don't intend to have more than one EKS deployment
 
 I will also use the tag `user=armand` to further identify my asset on our shared account
 
@@ -234,7 +234,7 @@ docker push 664341837355.dkr.ecr.us-west-2.amazonaws.com/armand/hello-world
 ```
 MY_REGION=us-west-2
 
-ews ecr   describe-repositories --region $MY_REGION | grep hello-world
+aws ecr   describe-repositories --region $MY_REGION | grep hello-world
 
 # example output:
             "repositoryArn": "arn:aws:ecr:us-west-2:664341837355:repository/armand/hello-world",
