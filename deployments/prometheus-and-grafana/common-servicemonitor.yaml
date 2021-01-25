@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: common-monitor
+  namespace: monitoring
+  labels:
+  app: nginx-ingress
+  release: kube-prometheus-stack
+spec:
+  endpoints:
+  - port: metrics
+    interval: 30s
+  jobLabel: monitoring
+  namespaceSelector:
+    any: true  # <- important
+  selector:
+    matchLabels:
+      app: nginx-ingress  # <- should match what you've chosen as common

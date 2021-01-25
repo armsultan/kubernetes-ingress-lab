@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alertmanager-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: nginx # use only with k8s version >= 1.18.0
+  rules:
+  - host: alertmanager.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kube-prometheus-stack-alertmanager
+          servicePort: 9093

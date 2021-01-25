@@ -1,0 +1,101 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loadgen-script
+data:
+  load.sh: |
+    #!/bin/bash 
+    #
+    # HOW TO:
+    #
+    # Use wrk2 so we can define Rate: -R or --rate
+    # wrk2: https://github.com/giltene/wrk2
+    # Install wrk2: https://github.com/giltene/wrk2/wiki/Installing-wrk2-on-Linux
+    # Recommended container: https://hub.docker.com/r/armsultan/network-tools
+    # The script takes two Arguments, first is IP address or resolvable hostname,
+    # (e.g. 10.0.0.1) and the second is Host header value (e.g. www.example.com)
+    # Set cron job to run script all the time
+    # * * * * * eval $(/bin/load.sh 10.0.0.1 www.example.com) >/dev/null 2>&1
+    #
+
+    # Set URL target and wrk2
+    TARGET=https://aaa46166a74b245848b806994ee554a0-1865443855.ap-southeast-2.elb.amazonaws.com/coffee
+    HOST=cafe.example.com
+    WRK=/bin/wrk2 # Absolute path to wrk2
+
+    # Set base rate (average) in requests per second in the array, where index is the hour of the day in 24hr Time
+    arr[0]=150
+    arr[1]=100
+    arr[2]=50
+    arr[3]=50
+    arr[4]=150
+    arr[5]=500
+    arr[6]=1000
+    arr[7]=2000
+    arr[8]=3000
+    arr[9]=4000
+    arr[10]=6000
+    arr[11]=9000
+    arr[12]=10000
+    arr[13]=15000
+    arr[14]=12000
+    arr[15]=9000
+    arr[16]=9000
+    arr[17]=6000
+    arr[18]=5000
+    arr[19]=4000
+    arr[20]=3000
+    arr[21]=1000
+    arr[22]=500
+    arr[23]=250
+
+    # 1. Get the base rate (average) based on time (hr) of day from the array
+    # 2. Calculate the low and the high rate
+    # 3. A random number (rate) is found using shuf between the low and high range
+    HR=$(date +"%-H") # (hyphen) do not pad the field i.e. 09 becomes 9
+    AVG_RATE=${arr[$HR]}
+    LOW=$(($AVG_RATE - $AVG_RATE * 1/20))
+    HIGH=$(($AVG_RATE + $AVG_RATE * 1/20))
+    RATE=$(shuf -i $LOW-$HIGH -n 1) # macOS can us gshuf instead of shuf
+
+    # Troubleshooting (must be commented out when this script is ran as a cronjob)
+    # echo "The hour is "$HR
+    # echo "The lower rate is "$LOW
+    # echo "The higher rate is "$HIGH
+
+    # Attack single target url
+    CMD='$WRK -t1 -c20 -d60s -R$RATE $TARGET -H "Host: $HOST"'
+    echo $CMD
+
+    # vim: syntax=sh
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: daily-loadgen-cron
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: loadgen-script
+              configMap:
+                name: loadgen-script
+          containers:
+          - name: daily-loadgen-cron
+            image: armsultan/network-tools:latest
+            command:
+              - sleep
+              - "3600"
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - name: loadgen-script
+                mountPath: /bin/load.sh
+            args:
+            - eval
+            - $(/bin/load.sh)
+          restartPolicy: OnFailure

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    grafana_dashboard: "1"
+  name: my-grafana-dashboard-configmap
+  namespace: my-monitoring-namespace
+data:
+  my-dashboard.json: |-
+    {
+    this is were your dashboard json goes
+    }

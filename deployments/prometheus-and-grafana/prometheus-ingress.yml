@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: nginx # use only with k8s version >= 1.18.0
+  rules:
+  - host: prometheus.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kube-prometheus-stack-prometheus
+          servicePort: 9090
