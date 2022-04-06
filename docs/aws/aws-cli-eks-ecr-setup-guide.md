@@ -149,7 +149,7 @@ eksctl create cluster \
      --region=$MY_REGION \
      --nodes=3 \
      --tags user=$MY_NAME \
-     --version=1.18
+     --version=1.21 # or leave out to install default version
 ```
 
 3. To create or update the `kubeconfig` file for your cluster, run the following
